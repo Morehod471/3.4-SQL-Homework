@@ -19,19 +19,19 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
             while (resultSet.next()) {
                 int idOfEmployee = resultSet.getInt("id");
-                String first_nameOfEmployee = resultSet.getString("first_name");
-                String last_nameOfEmployee = resultSet.getString("last_name");
+                String firstNameOfEmployee = resultSet.getString("first_name");
+                String lastNameOfEmployee = resultSet.getString("last_name");
                 String genderOfEmployee = resultSet.getString("gender");
                 String ageOfEmployee = resultSet.getString("age");
-                int city_idOfEmployee = resultSet.getInt("city_id");
+                int cityIdOfEmployee = resultSet.getInt("city_id");
 
-//                System.out.println("Имя: " + first_nameOfEmployee);
-//                System.out.println("Фамилия: " + last_nameOfEmployee);
+//                System.out.println("Имя: " + firstNameOfEmployee);
+//                System.out.println("Фамилия: " + lastNameOfEmployee);
 //                System.out.println("Пол: " + genderOfEmployee);
 //                System.out.println("Возраст: " + ageOfEmployee);
-//                System.out.println("Город: " + city_idOfEmployee);
+//                System.out.println("Город: " + cityIdOfEmployee);
 
-                employees.add(new Employee(idOfEmployee, first_nameOfEmployee, last_nameOfEmployee, genderOfEmployee, ageOfEmployee, city_idOfEmployee));
+                employees.add(new Employee(idOfEmployee, firstNameOfEmployee, lastNameOfEmployee, genderOfEmployee, ageOfEmployee, cityIdOfEmployee));
             }
 
         } catch (SQLException e) {
@@ -52,13 +52,13 @@ public class EmployeeDAOImpl implements EmployeeDAO {
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
             int idOfEmployee = resultSet.getInt("id");
-            String first_nameOfEmployee = resultSet.getString("first_name");
-            String last_nameOfEmployee = resultSet.getString("last_name");
+            String firstNameOfEmployee = resultSet.getString("first_name");
+            String lastNameOfEmployee = resultSet.getString("last_name");
             String genderOfEmployee = resultSet.getString("gender");
             String ageOfEmployee = resultSet.getString("age");
-            int city_idOfEmployee = resultSet.getInt("city_id");
+            int cityIdOfEmployee = resultSet.getInt("city_id");
 
-            return new Employee(idOfEmployee, first_nameOfEmployee, last_nameOfEmployee, genderOfEmployee, ageOfEmployee, city_idOfEmployee);
+            return new Employee(idOfEmployee, firstNameOfEmployee, lastNameOfEmployee, genderOfEmployee, ageOfEmployee, cityIdOfEmployee);
 
         } catch (SQLException e) {
             System.out.println("Ошибка при подключении к базе данных!");
