@@ -1,24 +1,20 @@
-import java.sql.*;
 public class Application {
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
 
         EmployeeDAOImpl employeeDAO = new EmployeeDAOImpl();
-        employeeDAO.getAllEmployees().forEach(System.out::println);
-        System.out.println();
 
-        System.out.println(employeeDAO.getEmployeeById(5));
-        System.out.println();
+        Employee employee1 = new Employee("John", "Week", "male", 48, 4);
+        Employee employee2 = new Employee("Mark", "Shaw", "male", 15, 1);
 
-        employeeDAO.createEmployee();
+        employeeDAO.getAllEmployee();
 
-        employeeDAO.getAllEmployees().forEach(System.out::println);
-        System.out.println();
+        employeeDAO.getEmployeeById(5);
 
-        employeeDAO.updateEmployee(7);
+        employeeDAO.createEmployee(employee1);
+
+        employeeDAO.updateEmployee(employee2, 3);
 
         employeeDAO.deleteEmployee(2);
 
-        employeeDAO.getAllEmployees().forEach(System.out::println);
-        System.out.println();
     }
 }
