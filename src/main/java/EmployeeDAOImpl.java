@@ -1,103 +1,59 @@
-import java.sql.*;
-import java.util.ArrayList;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 public class EmployeeDAOImpl implements EmployeeDAO {
-    private final String user = "postgres";
-    private final String password = "Badnis471merlion";
-    private final String url = "jdbc:postgresql://localhost:5432/skypro";
+    static EntityManager readPersistent() {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("myPersistenceUnit");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        return entityManager;
+    }
 
     @Override
-    public List<Employee> getAllEmployees() {
-        List<Employee> employees = new ArrayList<>();
-
-        try (final Connection connection = DriverManager.getConnection(url, user, password);
-             PreparedStatement statement =
-                     connection.prepareStatement("SELECT * FROM employee")) {
-
-            ResultSet resultSet = statement.executeQuery();
-
-            while (resultSet.next()) {
-                int idOfEmployee = resultSet.getInt("id");
-                String firstNameOfEmployee = resultSet.getString("first_name");
-                String lastNameOfEmployee = resultSet.getString("last_name");
-                String genderOfEmployee = resultSet.getString("gender");
-                String ageOfEmployee = resultSet.getString("age");
-                int cityIdOfEmployee = resultSet.getInt("city_id");
-
-//                System.out.println("Имя: " + firstNameOfEmployee);
-//                System.out.println("Фамилия: " + lastNameOfEmployee);
-//                System.out.println("Пол: " + genderOfEmployee);
-//                System.out.println("Возраст: " + ageOfEmployee);
-//                System.out.println("Город: " + cityIdOfEmployee);
-
-                employees.add(new Employee(idOfEmployee, firstNameOfEmployee, lastNameOfEmployee, genderOfEmployee, ageOfEmployee, cityIdOfEmployee));
-            }
-
-        } catch (SQLException e) {
-            System.out.println("Ошибка при подключении к БД!");
-            e.printStackTrace();
-        }
-
+    public List<Employee> getAllEmployee() {
+        EntityManager entityManager = readPersistent();
+        String s = "SELECT e FROM Employee e";
+        TypedQuery<Employee> query = entityManager.createQuery(s, Employee.class);
+        List<Employee> employees = query.getResultList();
+        entityManager.getTransaction().commit();
+        entityManager.close();
         return employees;
     }
 
     @Override
     public Employee getEmployeeById(int id) {
-
-        try (final Connection connection = DriverManager.getConnection(url, user, password)) {
-             PreparedStatement statement =
-                     connection.prepareStatement("SELECT * FROM employee WHERE id = " + id);
-
-            ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
-            int idOfEmployee = resultSet.getInt("id");
-            String firstNameOfEmployee = resultSet.getString("first_name");
-            String lastNameOfEmployee = resultSet.getString("last_name");
-            String genderOfEmployee = resultSet.getString("gender");
-            String ageOfEmployee = resultSet.getString("age");
-            int cityIdOfEmployee = resultSet.getInt("city_id");
-
-            return new Employee(idOfEmployee, firstNameOfEmployee, lastNameOfEmployee, genderOfEmployee, ageOfEmployee, cityIdOfEmployee);
-
-        } catch (SQLException e) {
-            System.out.println("Ошибка при подключении к базе данных!");
-            e.printStackTrace();
-        }
-        return null;
+        EntityManager entityManager = readPersistent();
+        Employee employee = entityManager.find(Employee.class, id);
+        entityManager.getTransaction().commit();
+        entityManager.close();
+        return employee;
     }
 
         @Override
-    public void createEmployee() {
-        try (final Connection connection = DriverManager.getConnection(url, user, password)) {
-            PreparedStatement statement =
-                    connection.prepareStatement("INSERT INTO employee (first_name, last_name, gender, age, city_id) VALUES ('Peter', 'Jackson', 'Male', 41, 1)");
-            statement.execute();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public void createEmployee(Employee employee) {
+            EntityManager entityManager = readPersistent();
+            entityManager.persist(employee);
+            entityManager.getTransaction().commit();
+            entityManager.close();
     }
 
     @Override
-    public void updateEmployee(int id) {
-        try (final Connection connection = DriverManager.getConnection(url, user, password)) {
-            PreparedStatement statement =
-                    connection.prepareStatement("UPDATE employee SET first_name = 'Anton' WHERE id = " + id);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public void updateEmployee(Employee employee) {
+        EntityManager entityManager = readPersistent();
+        entityManager.merge(employee);
+        entityManager.getTransaction().commit();
+        entityManager.close();
     }
+
 
     @Override
     public void deleteEmployee(int id) {
-            try (final Connection connection = DriverManager.getConnection(url, user, password);
-                 PreparedStatement statement =
-                         connection.prepareStatement("DELETE FROM employee WHERE id = " + id)) {
-                statement.executeUpdate();
-            } catch (SQLException e) {
-                System.out.println("Ошибка при подключении к БД!");
-                e.printStackTrace();
-            }
+        EntityManager entityManager = readPersistent();
+        entityManager.remove(entityManager.find(Employee.class, id));
+        entityManager.getTransaction().commit();
+        entityManager.close();
     }
 }

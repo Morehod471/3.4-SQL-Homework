@@ -1,22 +1,36 @@
-public class Employee {
-    private int id;
-    private String firstName;
-    private String lastName;
-    private String gender;
-    private String age;
-    private int cityId;
+import javax.persistence.*;
 
-    public Employee(int id, String first_name, String last_name, String gender, String age, int city_id) {
-        this.id = id;
+@Entity
+@Table(name = "employee")
+
+public class Employee {
+
+    @Id
+
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    @Column(name = "first_name")
+    private String firstName;
+    @Column(name = "last_name")
+    private String lastName;
+    @Column(name = "gender")
+    private String gender;
+    @Column(name = "age")
+    private int age;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "city")
+    private City city;
+
+    public Employee(String first_name, String last_name, String gender, int age, City city) {
         this.firstName = first_name;
         this.lastName = last_name;
         this.gender = gender;
         this.age = age;
-        this.cityId = city_id;
+        this.city= city;
     }
 
-    public int getId() {
-        return id;
+    public Employee() {
+
     }
 
     public String getFirstName() {
@@ -31,12 +45,12 @@ public class Employee {
         return gender;
     }
 
-    public String getAge() {
+    public int getAge() {
         return age;
     }
 
-    public int getCityId() {
-        return cityId;
+    public City getCity() {
+        return city;
     }
 
     public void setId(int id) {
@@ -55,12 +69,13 @@ public class Employee {
         this.gender = gender;
     }
 
-    public void setAge(String age) {
+    public void setAge(int age) {
         this.age = age;
     }
 
-    public void setCityId(int cityId) {
-        this.cityId = cityId;
+    public City setCity(int cityId) {
+        this.city = city;
+        return null;
     }
 
     @Override
@@ -71,7 +86,7 @@ public class Employee {
                 ", last_name='" + lastName + '\'' +
                 ", gender='" + gender + '\'' +
                 ", age='" + age + '\'' +
-                ", city_id=" + cityId +
+                ", city=" + city +
                 '}';
     }
 }
