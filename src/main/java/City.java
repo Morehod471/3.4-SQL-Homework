@@ -1,10 +1,29 @@
-public class City {
-    private int cityId;
-    private String cityName;
+import javax.persistence.*;
+import java.util.List;
 
-    public City(int cityId, String cityName) {
+@Entity
+@Table(name = "city")
+
+public class City {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Column(name = "city_id")
+    private int cityId;
+    @Column(name = "city_name")
+    private String cityName;
+    @OneToMany(mappedBy = "city", cascade = CascadeType.ALL)
+    private List<Employee> employee;
+
+    public City(String cityName) {
         this.cityId = cityId;
         this.cityName = cityName;
+        this.employee = employee;
+    }
+
+    public City() {
+
     }
 
     public int getCityId() {
@@ -21,6 +40,10 @@ public class City {
 
     public void setCityName(String cityName) {
         this.cityName = cityName;
+    }
+
+    public List<Employee> getEmployee() {
+        return employee;
     }
 
     @Override

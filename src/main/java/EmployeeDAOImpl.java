@@ -41,9 +41,8 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     }
 
     @Override
-    public void updateEmployee(Employee employee, int id) {
+    public void updateEmployee(Employee employee) {
         EntityManager entityManager = readPersistent();
-        employee.setId(id);
         entityManager.merge(employee);
         entityManager.getTransaction().commit();
         entityManager.close();
